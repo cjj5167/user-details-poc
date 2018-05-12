@@ -25,6 +25,8 @@ services:
       REDIS_HOST: proxy
       REDIS_PORT: 26379
       CACHE_DRIVER: redis
+    extra_hosts:
+      - "soci.al:127.0.0.1"
     ports:
       - "8080:80"
     volumes:
