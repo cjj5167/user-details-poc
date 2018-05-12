@@ -1,13 +1,7 @@
 [
   {
-    "name": "mysql",
-    "listen": "0.0.0.0:23306",
-    "upstream": "mysql:3306"
-  },
-  {
-    "name": "redis",
-    "listen": "0.0.0.0:26379",
-    "upstream": "redis:6379"
+    "name": "soci.al",
+    "listen": "0.0.0.0:23080",
+    "upstream": "app:80"
   }
 ]
-

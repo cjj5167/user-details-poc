@@ -17,13 +17,13 @@ services:
       context: .
       dockerfile: .docker/Dockerfile
     environment:
-      DB_HOST: proxy
-      DB_PORT: 23306
+      DB_HOST: mysql
+      DB_PORT: 3306
       DB_DATABASE: "${DB_DATABASE}"
       DB_USERNAME: "${DB_USERNAME}"
       DB_PASSWORD: "${DB_PASSWORD}"
-      REDIS_HOST: proxy
-      REDIS_PORT: 26379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       CACHE_DRIVER: redis
     extra_hosts:
       - "soci.al:127.0.0.1"
@@ -38,4 +38,3 @@ services:
     command: ["-config=/etc/user-details-poc/toxiproxy.json", "-host=0.0.0.0"]
     ports:
       - "18474:8474"
-
