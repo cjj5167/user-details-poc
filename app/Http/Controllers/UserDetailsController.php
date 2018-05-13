@@ -38,9 +38,12 @@ class UserDetailsController extends Controller
         }
         if ($this->social_circuit_breaker->isEnabled()) {
             try {
-                return $this->social_site_client->recentPostsForUser($user->handle);
+                $posts = $this->social_site_client->recentPostsForUser($user->handle);
+                $this->social_circuit_breaker->recordSuccess();
+                return $posts;
             } catch (\Exception $e) {
                 error_log("Error retrieving posts: {$e->getMessage()}");
+                $this->social_circuit_breaker->recordFailure($e);
                 throw new SocialSiteClientException("Error retrieving posts", 0, $e);
             }
         } else {
