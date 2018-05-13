@@ -12,7 +12,7 @@ class UserDetailsController extends Controller
     public function __construct(\App\SocialSiteClient $client)
     {
         $this->social_site_client = $client;
-        $this->social_circuit_breaker = \App\CircuitBreaker::where("name", "soci.al")->first();
+        $this->social_circuit_breaker = new \App\CircuitBreaker("social");
     }
 
     public function show($id): array
