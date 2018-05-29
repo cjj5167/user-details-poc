@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Cache;
 
 class CircuitBreaker {
@@ -12,7 +13,7 @@ class CircuitBreaker {
     public function __construct(string $name) {
         $this->name = $name;
         $this->redis = Cache::store("redis");
-        $this->fault_detector = new AlwaysTripFaultDetector();
+        $this->fault_detector = new FailureWindowFaultDetector($name, 2, CarbonInterval::minutes(1));
     }
 
     public function isEnabled(): bool {
