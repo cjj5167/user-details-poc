@@ -17,11 +17,28 @@ class UserDetailsController extends Controller
     {
         $user = \App\User::findOrFail($id);
         $user_attribs = $user->only(["id", "username", "last_login", "handle"]);
-        if ($user->handle) {
-            $posts = $this->social_site_client->recentPostsForUser($user->handle);
-        } else {
-            $posts = [];
+        $result = [];
+        try {
+            $posts = $this->getRecentPosts($user);
+            $result["status"] = "complete";
+            $result["details"] = $user_attribs + ["recent_posts" => $posts];
+        } catch (SocialSiteClientException $e) {
+            $result["status"] = "partial";
+            $result["details"] = $user_attribs + ["recent_posts" => []];
         }
-        return $user_attribs + ["recent_posts" => $posts];
+        return $result;
     }
+
+    private function getRecentPosts(\App\User $user): array
+    {
+        if ($user->handle === null) {
+            return [];
+        }
+        try {
+            return $this->social_site_client->recentPostsForUser($user->handle);
+        } catch (\Exception $e) {
+            throw new SocialSiteClientException("Error retrieving posts", 0, $e);
+        }
+    }
+
 }
