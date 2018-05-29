@@ -26,3 +26,10 @@ services:
     image: httpd:alpine
     volumes:
       - ./.docker/soci.al/:/usr/local/apache2/htdocs/
+  proxy:
+    image: shopify/toxiproxy
+    volumes:
+      - ./.docker:/etc/user-details-poc
+    command: ["-config=/etc/user-details-poc/toxiproxy.json", "-host=0.0.0.0"]
+    ports:
+      - "18474:8474"

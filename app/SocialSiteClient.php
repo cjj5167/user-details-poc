@@ -10,7 +10,9 @@ class SocialSiteClient
         $opts = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => ["Content-Type: application/json"],
-            CURLOPT_URL => $url
+            CURLOPT_URL => $url,
+            CURLOPT_CONNECT_TO => ["soci.al:80:proxy:23080"],
+            CURLOPT_TIMEOUT => 10
         ];
         $curl = curl_init();
         curl_setopt_array($curl, $opts);
