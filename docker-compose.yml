@@ -25,8 +25,6 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       CACHE_DRIVER: redis
-    extra_hosts:
-      - "soci.al:127.0.0.1"
     ports:
       - "8080:80"
     volumes:
@@ -38,3 +36,7 @@ services:
     command: ["-config=/etc/user-details-poc/toxiproxy.json", "-host=0.0.0.0"]
     ports:
       - "18474:8474"
+  soci.al:
+    image: httpd:alpine
+    volumes:
+      - ./.docker/soci.al/:/usr/local/apache2/htdocs/
