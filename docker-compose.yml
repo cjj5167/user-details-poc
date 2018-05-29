@@ -7,10 +7,6 @@ services:
       MYSQL_DATABASE: "${DB_DATABASE}"
       MYSQL_USER: "${DB_USERNAME}"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
-  redis:
-    image: redis:3.2
-    ports:
-      - "16379:6379"
   app:
     image: user-details-poc
     build:
@@ -22,20 +18,10 @@ services:
       DB_DATABASE: "${DB_DATABASE}"
       DB_USERNAME: "${DB_USERNAME}"
       DB_PASSWORD: "${DB_PASSWORD}"
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      CACHE_DRIVER: redis
     ports:
       - "8080:80"
     volumes:
       - .:/opt/user-details-poc
-  proxy:
-    image: shopify/toxiproxy
-    volumes:
-      - ./.docker:/etc/user-details-poc
-    command: ["-config=/etc/user-details-poc/toxiproxy.json", "-host=0.0.0.0"]
-    ports:
-      - "18474:8474"
   soci.al:
     image: httpd:alpine
     volumes:
