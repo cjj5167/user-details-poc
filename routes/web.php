@@ -16,3 +16,7 @@ $router->get('/', function () use ($router) {
 });
 
 $router->get('users/{id}', 'UserDetailsController@show');
+
+$router->get('circuit-breakers', 'CircuitBreakerController@index');
+$router->get('circuit-breakers/{name}', 'CircuitBreakerController@show');
+$router->get('circuit-breakers/{name}/reset', 'CircuitBreakerController@reset');

@@ -7,10 +7,12 @@ use App\SocialSiteClientException;
 class UserDetailsController extends Controller
 {
     private $social_site_client;
+    private $social_circuit_breaker;
 
     public function __construct(\App\SocialSiteClient $client)
     {
         $this->social_site_client = $client;
+        $this->social_circuit_breaker = new \App\CircuitBreaker("social");
     }
 
     public function show($id): array
@@ -34,10 +36,15 @@ class UserDetailsController extends Controller
         if ($user->handle === null) {
             return [];
         }
-        try {
-            return $this->social_site_client->recentPostsForUser($user->handle);
-        } catch (\Exception $e) {
-            throw new SocialSiteClientException("Error retrieving posts", 0, $e);
+        if ($this->social_circuit_breaker->isEnabled()) {
+            try {
+                return $this->social_site_client->recentPostsForUser($user->handle);
+            } catch (\Exception $e) {
+                $this->social_circuit_breaker->disable();
+                throw new SocialSiteClientException("Error retrieving posts", 0, $e);
+            }
+        } else {
+            throw new SocialSiteClientException("Posts service unavailable");
         }
     }
 
